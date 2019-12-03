@@ -169,7 +169,7 @@ class FileHandle {
       filename = filename.replace(/^TeXfonts:/,'fonts/');    
 
       if (filename == 'TeXformats:TEX.POOL')
-	filename = "tex.pool";
+	filename = "etex.pool";
 
       this.filename = filename;
       this.position = -1;

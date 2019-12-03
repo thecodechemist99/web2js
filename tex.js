@@ -5,7 +5,7 @@ var binary = fs.readFileSync('out.wasm');
 
 var code = new WebAssembly.Module(binary);
 
-var pages = 20;
+var pages = 290;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 
 var buffer = new Uint8Array( memory.buffer );

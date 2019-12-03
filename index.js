@@ -184,7 +184,7 @@ module.dispose();
 
 var code = new WebAssembly.Module(binary);
 
-var pages = 20;
+var pages = 290;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 
 var callstack = [];
@@ -290,7 +290,7 @@ var filesystemLibrary = {
     filename = filename.replace(/^TeXfonts:/,'fonts/');    
 
     if (filename == 'TeXformats:TEX.POOL')
-      filename = "tex.pool";
+      filename = "etex.pool";
 
     if (filename == "TTY:") {
       files.push({ filename: "stdin",
