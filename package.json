@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "node spec/run-tests.js",
-    "build": "jison parser.jison"
+    "build": "jison parser.jison",
+    "get-tex-sources": "wget -N http://ctan.math.washington.edu/tex-archive/systems/knuth/dist/tex/tex.web && wget -O etex.ch 'https://tug.org/svn/texlive/trunk/Build/source/texk/web2c/etexdir/etex.ch?revision=32727&view=co'",
+    "generate-pascal": "tie -m etex.web tex.web etex.ch && tangle -underline etex.web etex.sys",
+    "get-initex-deps": "wget -O tikzlibraryarrows.meta.code.tex https://raw.githubusercontent.com/pgf-tikz/pgf/master/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex && wget -N https://raw.githubusercontent.com/jhoobergs/dvi2html/master/pgfsys-ximera.def"
   },
   "author": "Jim Fowler",
   "license": "GPL-3.0",

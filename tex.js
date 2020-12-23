@@ -5,7 +5,7 @@ var binary = fs.readFileSync('out.wasm');
 
 var code = new WebAssembly.Module(binary);
 
-var pages = 290;
+var pages = 1000;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 
 var buffer = new Uint8Array( memory.buffer );
@@ -14,7 +14,8 @@ if (fs.readSync( f, buffer, 0, pages*65536 ) != pages*65536)
   throw 'Could not load memory dump';
 
 library.setMemory(memory.buffer);
-library.setInput("\n\\input sample");
+//library.setInput("\n&latex \\input sample");
+library.setInput(" \\input sample");
 
 var wasm = new WebAssembly.Instance(code, { library: library,
                                             env: { memory: memory } } );

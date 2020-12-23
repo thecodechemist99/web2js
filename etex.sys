@@ -89,7 +89,7 @@ emphasize this distinction.
   error messages and help texts, and the names of all fonts and
   control sequences; must exceed |string_vacancies| by the total
   length of \TeX's own strings, which is currently about 23000}
-@!save_size=600; {space for saving values outside of current group; must be
+@!save_size=1200; {space for saving values outside of current group; must be
   at most |max_halfword|}
 @!trie_size=600000; {space for hyphenation patterns; should be larger for
   \.{INITEX} than it is in production versions of \TeX}
@@ -122,7 +122,7 @@ emphasize this distinction.
 @d hash_size=2100 {maximum number of control sequences; it should be at most
   about |(mem_max-mem_min)/10|}
 @y
-@d hash_size=15000 {maximum number of control sequences; it should be at most
+@d hash_size=20000 {maximum number of control sequences; it should be at most
   about |(mem_max-mem_min)/10|}
 @z
 

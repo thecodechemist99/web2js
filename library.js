@@ -97,6 +97,7 @@ module.exports = {
     
     filename = filename.replace(/ +$/g,'');
     filename = filename.replace(/^TeXfonts:/,'fonts/');    
+    filename = filename.replace(/"/g, '');
 
     if (filename == 'TeXformats:TEX.POOL')
       filename = "etex.pool";
@@ -141,6 +142,7 @@ module.exports = {
     var filename = String.fromCharCode.apply(null, buffer);    
 
     filename = filename.replace(/ +$/g,'');    
+    filename = filename.replace(/"/g, '');
     
     if (filename == "TTY:") {
       files.push({ filename: "stdout",
