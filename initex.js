@@ -16,7 +16,7 @@ var wasm = new WebAssembly.Instance(code, { library: library,
                                             env: { memory: memory } } );
 
 library.setMemory(memory.buffer);
-library.setInput("\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}\\usepackage{tikz}\\usetikzlibrary{arrows.meta,calc}\n\n",
+library.setInput("\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}\\usepackage{tikz}\n\n",
                  function() {
                    var buffer = new Uint8Array( memory.buffer );                   
                    fs.writeFileSync('core.dump', buffer);

@@ -120,12 +120,12 @@ module.exports = {
             // Give up, just create empty file
             spawnSync('touch', [basename]);
             realFilename = basename;
-            console.log(`For filename #${filename}# created empty #${basename}#`);
+            console.log(`\nFor filename #${filename}# created empty #${basename}#`);
         } else {
-            console.log(`Found filename #${filename}# via basename at #${realFilename}#`);
+            console.log(`\nFound filename #${filename}# via basename at #${realFilename}#`);
         }
     } else {
-        console.log(`Found filename #${filename}# at #${realFilename}#`);
+        console.log(`\nFound filename #${filename}# at #${realFilename}#`);
     }
 
     files.push({

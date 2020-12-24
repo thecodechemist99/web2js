@@ -144,7 +144,6 @@ lexer.addRule(/{IDENTIFIER}/		, function(lexer) {
 lexer.addRule(/./		, function(lexer) { return '..'; } );
 
 var fs = require('fs');
-var filename = process.argv[2];
 var code = fs.readFileSync(process.argv[2]).toString();
 lexer.setSource(code);
 
