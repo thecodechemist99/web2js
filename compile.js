@@ -165,5 +165,5 @@ var program = parser.parse();
 
 var module = program.generate();
 
-fs.writeFileSync( "out.wasm", module.emitBinary() );
+fs.writeFileSync( "tex.wasm", module.emitBinary() );
 

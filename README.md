@@ -26,17 +26,13 @@ tangle -underline etex.web etex.sys
 ```
 You will now have the Pascal source `etex.p` along with `etex.pool` which contains the strings.
 
-Compile the `etex.p` sources to get the the WebAssembly binary `out.wasm`
+Compile the `etex.p` sources to get the the WebAssembly binary `tex.wasm`
 ```
 npm install
 npm run-script build
 node compile.js etex.p
 ```
 
-Download the file pgflibraryarrows.meta.code.tex and save it as tikzlibraryarrows.meta.code.tex.
-```
-wget -O tikzlibraryarrows.meta.code.tex https://raw.githubusercontent.com/pgf-tikz/pgf/master/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
-```
 Copy pgfsys-ximera.def from the jhoobergs dvi2html fork.
 ```
 wget https://raw.githubusercontent.com/jhoobergs/dvi2html/master/pgfsys-ximera.def
@@ -55,9 +51,9 @@ This outputs sample.dvi.  Convert to pdf to view using dvipdf (or dvips and ps2p
 
 Alternately change
 ```
-library.setInput("\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}\\usepackage{tikz}\\usetikzlibrary{arrows.meta,calc}\n\n",
+library.setInput("\n&latex \\documentclass...}\n\n",
 ```
-to
+in initex.js to
 ```
 library.setInput("\n&latex\n\n",
 ```
