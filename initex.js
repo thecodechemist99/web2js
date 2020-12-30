@@ -5,7 +5,7 @@ var binary = fs.readFileSync('tex.wasm');
 
 var code = new WebAssembly.Module(binary);
 
-var pages = 1000;
+var pages = 2000;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 library.setMemory(memory.buffer);
 library.setInput("\n*latex.ltx \\dump\n\n", function() {});
