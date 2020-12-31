@@ -20,7 +20,7 @@ library.setInput("\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysd
 
 		// Save the files used to a json file.
 		let filesystem = library.getUsedFiles();
-		fs.writeFileSync('initex-filesystem.json', JSON.stringify(filesystem, null, '\t'));
+		fs.writeFileSync('initex-files.json', JSON.stringify(filesystem, null, '\t'));
 
 		process.exit();
 	});

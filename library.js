@@ -101,7 +101,7 @@ module.exports = {
 		var filename = String.fromCharCode.apply(null, buffer);
 
 		filename = filename.replace(/ +$/g, '');
-		filename = filename.replace(/^TeXfonts:/, 'fonts/');
+		filename = filename.replace(/^TeXfonts:/, '');
 		filename = filename.replace(/"/g, '');
 
 		if (filename == 'TeXformats:TEX.POOL')
@@ -115,7 +115,6 @@ module.exports = {
 			return files.length - 1;
 		}
 
-		let basename = filename.slice(filename.lastIndexOf('/') + 1);
 		const {spawnSync} = require('child_process');
 		let realFilename = spawnSync('kpsewhich', [filename]).stdout.toString().trim();
 
@@ -129,6 +128,7 @@ module.exports = {
 
 		if (realFilename == '') {
 			// try again with basename
+			let basename = filename.slice(filename.lastIndexOf('/') + 1);
 			realFilename = spawnSync('kpsewhich', [basename]).stdout.toString().trim();
 			if (realFilename == '') {
 				// Give up, just create empty file
