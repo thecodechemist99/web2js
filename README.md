@@ -1,21 +1,38 @@
 # web2js
 
-This is a Pascal compiler that targets WebAssembly, designed
-specifically to compile TeX.
+This is a Pascal compiler that targets WebAssembly, designed specifically to compile TeX.
 
 ## Getting started
 
-The following assumes you have TeX running on your machine (e.g., that
-`tangle` is available).
+The following assumes you have TeX running on your machine (e.g., that `tangle` is available),
+and that you have the neccessary tex files installed on your system.
 
-Download a clean copy of the TeX WEB source.
+A quick path to generate the tex.wasm and core.dump files is
 ```
-wget http://ctan.math.washington.edu/tex-archive/systems/knuth/dist/tex/tex.web
+npm install
+npm run get-tex-sources
+npm run build
+npm run generate-wasm
+npm run initex
 ```
-Download the e-TeX change file.
+
+More details on this process are below.
+
+Install node modules.
 ```
-wget -O etex.ch 'https://tug.org/svn/texlive/trunk/Build/source/texk/web2c/etexdir/etex.ch?revision=32727&view=co'
+npm install
 ```
+
+Generate the Pascal parser.
+```
+npm run build
+```
+
+Download the TeX WEB source and e-TeX change file.
+```
+npm run get-tex-sources
+```
+
 Tie the TeX WEB source and e-TeX change file.
 ```
 tie -m etex.web tex.web etex.ch
@@ -28,24 +45,31 @@ You will now have the Pascal source `etex.p` along with `etex.pool` which contai
 
 Compile the `etex.p` sources to get the the WebAssembly binary `tex.wasm`
 ```
-npm install
-npm run-script build
 node compile.js etex.p
 ```
 
-Copy pgfsys-ximera.def from the jhoobergs dvi2html fork.
+The above three commands can all be run with
 ```
-wget https://raw.githubusercontent.com/jhoobergs/dvi2html/master/pgfsys-ximera.def
+npm run generate-wasm
 ```
 
 Produce the memory dump corresponding to the WebAssembly binary.
 ```
 node initex.js
 ```
-
-Remove `\\def\\pgfsysdriver{pgfsys-ximera.def}` and re-run `node initex.js` and compile `sample.tex` by running
+or
 ```
-node tex.js
+npm run initex
+```
+
+To test the assembly and core dump run
+```
+node tex.js sample.tex
+```
+
+If you remove `\\def\\pgfsysdriver{pgfsys-ximera.def}`, re-run `node initex.js`, compile `sample.tex` by running
+```
+node tex.js sample.tex
 ```
 This outputs sample.dvi.  Convert to pdf to view using dvipdf (or dvips and ps2pdf).
 
@@ -57,4 +81,7 @@ in initex.js to
 ```
 library.setInput("\n&latex\n\n",
 ```
-This generates a general latex compiler.  To use it uncomment the first three lines of sample.tex, and run `node tex.js`.  The files needed to compile must be available and locatable by kpsewhich.
+to generate a general latex compiler.  To use it uncomment the first three lines of sample.tex, and run
+```
+node tex.js sample.tex
+```
