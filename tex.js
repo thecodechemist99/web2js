@@ -3,7 +3,7 @@ var library = require('./library');
 
 var code = fs.readFileSync('tex.wasm');
 
-var pages = 2000;
+var pages = require('./commonMemory').pages;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 
 var buffer = new Uint8Array(memory.buffer);

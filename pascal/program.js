@@ -4,7 +4,7 @@ var Environment = require('./environment.js');
 var Stack = require('./stack.js');
 var Memory = require('./memory.js');
 
-var pages = 2000;
+var pages = require('../commonMemory').pages;
 
 module.exports = class Program {
   constructor(labels,consts,types,vars,pfs,compound, parent) {
