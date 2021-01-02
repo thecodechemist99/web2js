@@ -22,6 +22,6 @@ WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).the
 	delete filesystem[process.argv[2]];
 	delete filesystem[process.argv[2].replace(/\.tex/, ".aux")];
 
-	fs.writeFileSync('tex-files-resolved.json', JSON.stringify(filesystem, null, '\t'));
-	fs.writeFileSync('tex-files.json', JSON.stringify(Object.keys(filesystem), null, '\t'));
+	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}-files-resolved.json`, JSON.stringify(filesystem, null, '\t'));
+	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}-files.json`, JSON.stringify(Object.keys(filesystem), null, '\t'));
 });
