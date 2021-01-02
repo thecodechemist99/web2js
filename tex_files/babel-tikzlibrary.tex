@@ -1,0 +1,16 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{babel}
+
+\begin{document}
+
+\catcode`\.=\active
+\def.{\o}
+
+\begin{tikzpicture}[handle active characters in code, handle active characters in nodes]
+\node [draw,label=f..,minimum width=3.0cm] {hall. pe.ple};
+\end{tikzpicture}
+
+\end{document}
+
+\bye

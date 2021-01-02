@@ -1,0 +1,18 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{scopes}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \draw [help lines] (0,0) grid (3,2);
+    { [local bounding box=outer box]
+        \draw (1,1) circle (.5) [local bounding box=inner box] (2,2) circle (.5);
+    }
+    \draw
+    (outer box.south west) rectangle (outer box.north east);
+    \draw[red] (inner box.south west) rectangle (inner box.north east);
+\end{tikzpicture}
+\end{document}
+
+\bye

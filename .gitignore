@@ -18,3 +18,9 @@ spec/*.o
 .next
 *.wast
 *.wabt
+*.aux
+tex_files/*.json
+tex_files/*.dvi
+tex_files/*.pdf
+initex-files.json
+parser.js

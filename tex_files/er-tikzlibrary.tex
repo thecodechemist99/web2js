@@ -1,0 +1,15 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{er}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \node[entity] (sheep) at (0,0) {Sheep};
+    \node[entity] (genome) at (2,0) {Genome};
+    \node[relationship] at (1,1.5) {has} edge (sheep) edge (genome);
+\end{tikzpicture}
+
+\end{document}
+
+\bye

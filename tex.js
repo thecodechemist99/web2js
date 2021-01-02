@@ -15,6 +15,8 @@ library.setMemory(memory.buffer);
 library.setInput(` ${process.argv[2]} \n\\end\n`);
 
 WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).then(() => {
+	console.log('');
+
 	// Save the files used by this instance to a json file.
 	let filesystem = library.getUsedFiles();
 

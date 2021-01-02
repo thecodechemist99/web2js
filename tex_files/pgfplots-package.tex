@@ -1,0 +1,31 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}
+        [
+            ybar=0pt,
+            bar width=1cm,
+            width=9cm,
+            height=8cm,
+            enlarge x limits=0.2,
+            ymajorgrids,
+            ymin=0,
+            ymax=11,
+            ylabel={\textbf{Number of Books}},
+            xtick=data,
+            xticklabels={Philosophy, Math, Literature, History},
+            ytick={1,...,10},
+            major x tick style={opacity=0},
+        ]
+        \addplot[draw=black,fill=blue!20] coordinates {(0, 4) (1, 2) (2, 10) (3, 7)};
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}
+
+\bye

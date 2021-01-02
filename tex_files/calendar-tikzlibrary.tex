@@ -1,0 +1,16 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{calendar}
+
+\begin{document}
+
+\begin{tikzpicture}[every day/.style={anchor=mid}]
+    \calendar
+    [dates=2000-01-01 to 2000-01-31,week list]
+    if (Sunday) [red]
+    if (equals=2000-01-20) {\draw (0,0) circle (8pt);};
+\end{tikzpicture}
+
+\end{document}
+
+\bye

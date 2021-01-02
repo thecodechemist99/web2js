@@ -1,0 +1,15 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{angles}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \draw (2,0) coordinate (A) -- (0,0) coordinate (B) -- (-1,-1) coordinate (C)
+    pic[fill=black!50] {angle = A--B--C}
+    pic[draw,->,red,thick,angle radius=1cm] {angle = C--B--A};
+\end{tikzpicture}
+
+\end{document}
+
+\bye
