@@ -1,0 +1,12 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{bending}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \draw [red!25,line width=1mm] (-1,0) -- (1,0);
+    \draw [red,line width=1mm,-{[flex,sep]>>>}] (-1,-.5) .. controls (0,-.5) and (0,0) .. (1,0);
+\end{tikzpicture}
+
+\end{document}

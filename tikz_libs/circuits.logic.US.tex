@@ -1,0 +1,14 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{circuits.logic.US}
+
+\begin{document}
+
+\begin{tikzpicture}[minimum height=1.5cm]
+    \node[xnor gate US, draw, gray!50,line width=2pt] (A) {};
+    \foreach \x/\y/\z in {false/blue/1pt, true/red/2pt}
+    \foreach \a in {north, south, east, west, north east, south east, north west, south west}
+    \draw[logic gate anchors use bounding box=\x, color=\y] (A.\a) circle(\z);
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,11 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{circuits.ee.IEC}
+
+\begin{document}
+
+\begin{tikzpicture}[circuit ee IEC]
+    \draw (0,0) to [diode={light emitting}] (3,0) to [resistor={adjustable}] (3,2);
+\end{tikzpicture}
+
+\end{document}

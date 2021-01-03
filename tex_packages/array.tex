@@ -1,0 +1,17 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usepackage{array}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \node {
+        $\begin{array}{>{\displaystyle}cm{2cm}}
+            \int_2^3 5x \,dx & $\left.\frac{5}{2}x^2\right|_2^3$ \\
+            5 & more stuff
+        \end{array}$
+    };
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,12 @@
+%\documentclass[margin=0pt]{standalone}
+%\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \pgfpathsvg{M 0 0 l 20 0 0 20 -20 0 q 10 0 10 10 t 10 10 10 10 h -50 z}
+    \pgfusepath{stroke}
+\end{tikzpicture}
+
+\end{document}
