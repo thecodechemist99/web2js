@@ -20,10 +20,12 @@ WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).the
 	// Save the files used by this instance to a json file.
 	let filesystem = library.getUsedFiles();
 
-	// Don't save the input filename or the generated aux filename.
+	// Don't save the input filename or any generated aux files.
 	delete filesystem[process.argv[2]];
-	delete filesystem[process.argv[2].replace(/\.tex/, ".aux")];
+	for (const filename in filesystem) {
+		if (/\.aux$/.test(filename)) delete filesystem[filename];
+	}
 
-	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}-files-resolved.json`, JSON.stringify(filesystem, null, '\t'));
-	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}-files.json`, JSON.stringify(Object.keys(filesystem), null, '\t'));
+	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}.resolved.json`, JSON.stringify(filesystem, null, '\t' + "\n"));
+	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}.json`, JSON.stringify(Object.keys(filesystem), null, '\t') + "\n");
 });
