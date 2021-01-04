@@ -9,8 +9,6 @@ var memory = undefined;
 var inputBuffer = undefined;
 var callback = undefined;
 
-fs.mkdirSync('./fake_files', { recursive: true });
-
 module.exports = {
 	setMemory: function(m) {
 		memory = m;
@@ -118,6 +116,12 @@ module.exports = {
 		const {spawnSync} = require('child_process');
 		let realFilename = spawnSync('kpsewhich', [filename]).stdout.toString().trim();
 
+		// Always use an .aux file in the same location as the .tex file.
+		if (realFilename == '' && filename.match(/\.aux$/)) {
+			spawnSync('touch', [filename]);
+			realFilename = filename;
+		}
+
 		// Tex requests some tikz library files with the name
 		// tikzlibrary<libname>.code.tex.  However, the actual file on the system is
 		// pgflibrary<libname>.code.tex.  Somehow latex and pdflatex resolve this to the
@@ -132,6 +136,7 @@ module.exports = {
 			realFilename = spawnSync('kpsewhich', [basename]).stdout.toString().trim();
 			if (realFilename == '') {
 				// Give up, just create empty file
+				fs.mkdirSync('./fake_files', { recursive: true });
 				spawnSync('touch', ["fake_files/" + basename]);
 				realFilename = "fake_files/" + basename;
 				usedFiles[filename] = realFilename;
