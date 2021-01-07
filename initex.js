@@ -10,7 +10,7 @@ var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 library.setMemory(memory.buffer);
 library.setInput("\n*latex.ltx \\dump\n\n", function() {});
 
-WebAssembly.instantiate(code, { library: library, env: { memory: memory } });
+var wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
 
 library.setMemory(memory.buffer);
 library.setInput(`\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}
@@ -26,4 +26,4 @@ library.setInput(`\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysd
 		process.exit();
 	});
 
-WebAssembly.instantiate(code, { library: library, env: { memory: memory } });
+wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });

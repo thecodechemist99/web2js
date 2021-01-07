@@ -23,6 +23,23 @@ module.exports = {
 		return usedFiles;
 	},
 
+	getCurrentMinutes: function() {
+		var d = (new Date());
+		return 60 * (d.getHours()) + d.getMinutes();
+	},
+
+	getCurrentDay: function () {
+		return (new Date()).getDate();
+	},
+
+	getCurrentMonth: function() {
+		return (new Date()).getMonth() + 1;
+	},
+
+	getCurrentYear: function() {
+		return (new Date()).getFullYear();
+	},
+
 	printString: function(descriptor, x) {
 		var file = (descriptor < 0) ? {stdout:true} : files[descriptor];
 		var length = new Uint8Array(memory, x, 1)[0];
@@ -86,12 +103,6 @@ module.exports = {
 		}
 
 		fs.writeSync(file.descriptor, "\n");
-	},
-
-	enterFunction: function(x, stack) {
-	},
-
-	leaveFunction: function(x, stack) {
 	},
 
 	reset: function(length, pointer) {

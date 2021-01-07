@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "node spec/run-tests.js",
-    "get-tex-sources": "wget -N http://ctan.math.washington.edu/tex-archive/systems/knuth/dist/tex/tex.web && wget -O etex.ch 'https://tug.org/svn/texlive/trunk/Build/source/texk/web2c/etexdir/etex.ch?revision=32727&view=co'",
     "build": "jison parser.jison",
-    "generate-wasm": "tie -m etex.web tex.web etex.ch && tangle -underline etex.web etex.sys && node compile.js etex.p",
-    "initex": "node initex.js"
+    "generate-wasm": "tie -m etex.web texk/tex.web etexdir/etex.ch date.ch && tangle -underline etex.web etex.sys && node compile.js etex.p",
+    "initex": "node initex.js",
+    "optimize-wasm": "wasm-opt -O tex.wasm -o out.wasm && mv out.wasm tex.wasm",
+    "generate-core": "npm run build && npm run generate-wasm && npm run optimize-wasm && node initex.js"
   },
   "author": "Jim Fowler",
   "license": "GPL-3.0",
   "dependencies": {
-    "binaryen": "^64.0.0",
+    "binaryen": "^89.0.0",
     "flex-js": "^1.0.4",
     "jison": "^0.4.18",
     "pegjs": "^0.10.0"

@@ -10,9 +10,16 @@ and that you have the neccessary tex files installed on your system.
 A quick path to generate the tex.wasm and core.dump files is
 ```
 npm install
-npm run get-tex-sources
 npm run build
 npm run generate-wasm
+```
+You may want to run (assumes wasm-opt is on your path)
+```
+wasm-opt -O tex.wasm -o out.wasm
+mv out.wasm tex.wasm
+```
+Then run
+```
 npm run initex
 ```
 
@@ -28,14 +35,16 @@ Generate the Pascal parser.
 npm run build
 ```
 
-Download the TeX WEB source and e-TeX change file.
+The contents of the `texk` and `etexdir` subdirectories were simply copied from tug.org via
 ```
-npm run get-tex-sources
+mkdir texk
+rsync -a --delete --exclude=.svn tug.org::tldevsrc/Build/source/texk/web2c/tex.web texk
+rsync -a --delete --exclude=.svn tug.org::tldevsrc/Build/source/texk/web2c/etexdir .
 ```
 
 Tie the TeX WEB source and e-TeX change file.
 ```
-tie -m etex.web tex.web etex.ch
+tie -m etex.web texk/tex.web etexdir/etex.ch date.ch
 ```
 Produce the Pascal source by tangling.
 ```
@@ -52,6 +61,13 @@ The above three commands can all be run with
 ```
 npm run generate-wasm
 ```
+
+You may want to optimize the wasm binary by running
+```
+wasm-opt -O tex.wasm -o out.wasm
+mv out.wasm tex.wasm
+```
+This assumes that wasm-opt is in your path.
 
 Produce the memory dump corresponding to the WebAssembly binary.
 ```

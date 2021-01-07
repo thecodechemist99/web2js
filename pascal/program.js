@@ -72,13 +72,8 @@ module.exports = class Program {
     module.addFunctionImport( "printNewline", "library", "printNewline",
                               module.addFunctionType(null, Binaryen.none, [Binaryen.i32] ) );
 
-    module.addFunctionImport( "enterFunction", "library", "enterFunction",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32, Binaryen.i32] ) );
-    module.addFunctionImport( "leaveFunction", "library", "leaveFunction",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32, Binaryen.i32] ) );
-    
     module.addFunctionImport( "reset", "library", "reset",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );        
+                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
     
     module.addFunctionImport( "rewrite", "library", "rewrite",
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
@@ -96,12 +91,23 @@ module.exports = class Program {
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );    
 
     module.addFunctionImport( "eoln", "library", "eoln",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );    
+                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );
 
     module.addFunctionImport( "close", "library", "close",
                               module.addFunctionType(null, Binaryen.none, [Binaryen.i32] ) );
 
-    
+    module.addFunctionImport( "getCurrentMinutes", "library", "getCurrentMinutes",
+                              module.addFunctionType(null, Binaryen.i32, [] ) );
+
+    module.addFunctionImport( "getCurrentDay", "library", "getCurrentDay",
+                              module.addFunctionType(null, Binaryen.i32, [] ) );
+
+    module.addFunctionImport( "getCurrentMonth", "library", "getCurrentMonth",
+                              module.addFunctionType(null, Binaryen.i32, [] ) );
+
+    module.addFunctionImport( "getCurrentYear", "library", "getCurrentYear",
+                              module.addFunctionType(null, Binaryen.i32, [] ) );
+
     this.memory.setup();
     
     return module;

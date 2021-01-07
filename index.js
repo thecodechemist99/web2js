@@ -256,21 +256,6 @@ var library = {
 
     fs.writeSync( file.descriptor, "\n");    
   },
-
-  enterFunction: function(x, stack) {
-    callstack.push(program.traces[x]);
-    stackstack.push(stack);
-    //console.log("enter",program.traces[x]);
-  },
-
-  leaveFunction: function(x, stack) {
-    callstack.pop();
-    var old = stackstack.pop();
-    if (old != stack) {
-      console.log("stack=",stack,"versus",old);
-    }
-    //console.log("leave",program.traces[x]);
-  },  
 };
 
 var inputBuffer = "\nplain\n\\input sample\n";
