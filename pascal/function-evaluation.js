@@ -58,13 +58,17 @@ module.exports = class FunctionEvaluation {
     if (name.toLowerCase() == "odd") {
       this.type = new Identifier("boolean");
       var n = this.xs[0].generate(environment);
-      return module.i32.eq( module.i32.rem_s( n, module.i32.const(2) ), module.i32.const(1) );
+      // https://en.wikipedia.org/wiki/Modulo_operation#Common_pitfalls
+      return module.i32.ne( module.i32.rem_s( n, module.i32.const(2) ), module.i32.const(0) );
     }
 
-    // erstat always OKAY
     if (name.toLowerCase() == "erstat") {
       this.type = new Identifier("integer");
-      return module.i32.const(0);
+
+      var file = this.xs[0];
+
+      return module.call( "erstat", [file.generate(environment)],
+                          Binaryen.i32 );
     }
 
     if (name.toLowerCase() == "eoln") {
@@ -76,7 +80,6 @@ module.exports = class FunctionEvaluation {
                           Binaryen.i32 );
     }    
 
-    
     if (name.toLowerCase() == "eof") {
       this.type = new Identifier("boolean");
 
@@ -85,7 +88,7 @@ module.exports = class FunctionEvaluation {
       return module.call( "eof", [file.generate(environment)],
                           Binaryen.i32 );
     }    
-    
+
     var offset = 0;
     var commands = [];
     var stack = environment.program.stack;

@@ -74,7 +74,7 @@ module.exports = class Program {
 
     module.addFunctionImport( "reset", "library", "reset",
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
-    
+
     module.addFunctionImport( "rewrite", "library", "rewrite",
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
 
@@ -91,6 +91,9 @@ module.exports = class Program {
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );    
 
     module.addFunctionImport( "eoln", "library", "eoln",
+                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );
+
+    module.addFunctionImport( "erstat", "library", "erstat",
                               module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );
 
     module.addFunctionImport( "close", "library", "close",

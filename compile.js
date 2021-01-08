@@ -23,9 +23,6 @@ lexer.addRule('{', function (lexer) {
 
 lexer.addRule(/{W}/);
 
-//lexer.addRule(/procedure [a-z_]+;[ \n\t]*forward;/);
-//lexer.addRule(/function [(),:a-z_]+;[ \n\t]*forward;/);
-
 lexer.addRule("packed"		, function(lexer) { return 'packed'; } );
 lexer.addRule("forward"		, function(lexer) { return 'forward'; } );
 lexer.addRule("and"		, function(lexer) { return 'and'; } );

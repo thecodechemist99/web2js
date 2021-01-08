@@ -3,6 +3,7 @@ var process = require('process');
 var callstack = [];
 var stackstack = [];
 var files = [];
+var exec = require('child_process').execSync;
 var usedFiles = {};
 
 var memory = undefined;
@@ -109,7 +110,13 @@ module.exports = {
 		var buffer = new Uint8Array(memory, pointer, length);
 		var filename = String.fromCharCode.apply(null, buffer);
 
+		if (filename.startsWith('{')) {
+			filename = filename.replace(/^{/g, '');
+			filename = filename.replace(/}.*/g, '');
+		}
+
 		filename = filename.replace(/ +$/g, '');
+		filename = filename.replace(/^\*/, '');
 		filename = filename.replace(/^TeXfonts:/, '');
 		filename = filename.replace(/"/g, '');
 
@@ -120,51 +127,29 @@ module.exports = {
 			files.push({ filename: "stdin",
 				stdin: true,
 				position: 0,
+				erstat: 0
 			});
 			return files.length - 1;
 		}
 
-		const {spawnSync} = require('child_process');
-		let realFilename = spawnSync('kpsewhich', [filename]).stdout.toString().trim();
-
-		// Always use an .aux file in the same location as the .tex file.
-		if (realFilename == '' && filename.match(/\.aux$/)) {
-			spawnSync('touch', [filename]);
-			realFilename = filename;
+		let path = "";
+		try {
+			path = exec('kpsewhich ' + filename).toString().split("\n")[0];
+		} catch (e) {
+			files.push({
+				filename: filename,
+				erstat: 1
+			});
+			return files.length - 1;
 		}
 
-		// Tex requests some tikz library files with the name
-		// tikzlibrary<libname>.code.tex.  However, the actual file on the system is
-		// pgflibrary<libname>.code.tex.  Somehow latex and pdflatex resolve this to the
-		// correct file, but tex/etex do not.  This attempts to deal with that.
-		if (realFilename == '' && filename.startsWith('tikzlibrary')) {
-			realFilename = spawnSync('kpsewhich', [filename.replace(/^tikzlibrary/, "pgflibrary")]).stdout.toString().trim();
-		}
-
-		if (realFilename == '') {
-			// try again with basename
-			let basename = filename.slice(filename.lastIndexOf('/') + 1);
-			realFilename = spawnSync('kpsewhich', [basename]).stdout.toString().trim();
-			if (realFilename == '') {
-				// Give up, just create empty file
-				fs.mkdirSync('./fake_files', { recursive: true });
-				spawnSync('touch', ["fake_files/" + basename]);
-				realFilename = "fake_files/" + basename;
-				usedFiles[filename] = realFilename;
-				console.log(`\nFor filename #${filename}# created empty #${basename}#`);
-			} else {
-				usedFiles[filename] = realFilename;
-				console.log(`\nFound filename #${filename}# via basename at #${realFilename}#`);
-			}
-		} else {
-			usedFiles[filename] = realFilename;
-			console.log(`\nFound filename #${filename}# at #${realFilename}#`);
-		}
+		usedFiles[filename] = path;
 
 		files.push({
 			filename: filename,
 			position: 0,
-			descriptor: fs.openSync(realFilename, 'r'),
+			erstat: 0,
+			descriptor: fs.openSync(path, 'r'),
 		});
 
 		return files.length - 1;
@@ -179,7 +164,8 @@ module.exports = {
 
 		if (filename == "TTY:") {
 			files.push({ filename: "stdout",
-				stdout: true
+				stdout: true,
+				erstat: 0,
 			});
 			return files.length - 1;
 		}
@@ -187,6 +173,7 @@ module.exports = {
 		files.push({
 			filename: filename,
 			position: 0,
+			erstat: 0,
 			descriptor: fs.openSync(filename, 'w')
 		});
 
@@ -211,6 +198,11 @@ module.exports = {
 			return 0;
 	},
 
+	erstat: function(descriptor) {
+		var file = files[descriptor];
+		return file.erstat;
+	},
+
 	eoln: function(descriptor) {
 		var file = files[descriptor];
 
@@ -232,8 +224,14 @@ module.exports = {
 			} else
 				buffer[pointer] = inputBuffer[file.position].charCodeAt(0);
 		} else {
-			if (fs.readSync(file.descriptor, buffer, pointer, length, file.position) == 0) {
-				buffer[pointer] = 0;
+			if (file.descriptor) {
+				if (fs.readSync(file.descriptor, buffer, pointer, length, file.position) == 0) {
+					buffer[pointer] = 0;
+					file.eof = true;
+					file.eoln = true;
+					return;
+				}
+			} else {
 				file.eof = true;
 				file.eoln = true;
 				return;
