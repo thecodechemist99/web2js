@@ -6,9 +6,9 @@
   "scripts": {
     "test": "node spec/run-tests.js",
     "build": "jison parser.jison",
-    "generate-wasm": "tie -m etex.web texk/tex.web etexdir/etex.ch date.ch && tangle -underline etex.web etex.sys && node compile.js etex.p",
+    "generate-wasm": "tie -m tex.web texk/tex.web etexdir/etex.ch date.ch && tangle -underline tex.web etex.sys && node compile.js tex.p out.wasm",
     "initex": "node initex.js",
-    "optimize-wasm": "wasm-opt -O tex.wasm -o out.wasm && mv out.wasm tex.wasm",
+    "optimize-wasm": "wasm-opt -O out.wasm -o tex.wasm",
     "generate-core": "npm run build && npm run generate-wasm && npm run optimize-wasm && node initex.js"
   },
   "author": "Jim Fowler",
@@ -20,7 +20,7 @@
     "pegjs": "^0.10.0"
   },
   "devDependencies": {
-    "colors": "^1.3.3",
+    "colors": "^1.4.0",
     "glob": "^7.1.3",
     "log-symbols": "^2.2.0"
   }

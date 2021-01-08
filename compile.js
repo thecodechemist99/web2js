@@ -162,5 +162,19 @@ var program = parser.parse();
 
 var module = program.generate();
 
-fs.writeFileSync( "tex.wasm", module.emitBinary() );
+module.runPasses([
+  "remove-unused-brs",
+  "pick-load-signs",
+  "precompute",
+  "precompute-propagate",
+  "code-pushing",
+  "duplicate-function-elimination",
+  "inlining-optimizing",
+  "dae-optimizing",
+  "generate-stack-ir",
+  "optimize-stack-ir"
+]);
 
+fs.writeFileSync( process.argv[3], module.emitBinary() );
+
+console.log("Using ", program.memory.memorySize, "bytes" );
