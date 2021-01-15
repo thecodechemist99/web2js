@@ -21,8 +21,8 @@
 % Ximera will transform <svg> into an opening tag which includes the
 % correct positioning and scale information
 
-\def\pgfsys@beginpicture{\pgfsys@invoke{<svg><g stroke-miterlimit="10" transform="translate({?x},{?y}) scale(1,-1)">}}
-\def\pgfsys@endpicture{\pgfsys@invoke{</g></svg>}}
+\def\pgfsys@beginpicture{\pgfsys@invoke{<svg beginpicture><g stroke-miterlimit="10" transform="translate({?x},{?y}) scale(1,-1)">}}
+\def\pgfsys@endpicture{\pgfsys@invoke{</g></svg endpicture>}}
 
 \def\pgfsys@svg@newline{{?nl}}
 
