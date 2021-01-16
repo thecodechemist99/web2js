@@ -24,3 +24,9 @@ tex_files/*.dvi
 tex_files/*.pdf
 initex-files.json
 parser.js
+core.dump
+latex.fmt
+*.wasm
+*.p
+*.pool
+tex.web
