@@ -26,7 +26,7 @@ function processDir(dir) {
 			}
 			console.log(`Running TeX on ${texFile}`);
 			fs.writeFileSync(`tikz_libs/${tikzLibName}.output.log`,
-				spawnSync('node', ['tex.js', texFile]).stdout.toString());
+				spawnSync('node', ['tex.js', texFile, "y"]).stdout.toString());
 			console.log(`TeX output saved to tikz_libs/${tikzLibName}.output.log`);
 		}
 	}

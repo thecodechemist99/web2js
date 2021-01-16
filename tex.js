@@ -1,13 +1,13 @@
 var fs = require('fs');
 var library = require('./library');
 
-var code = fs.readFileSync('tex.wasm');
+var code = fs.readFileSync(`${__dirname}/tex.wasm`);
 
 var pages = require('./commonMemory').pages;
 var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
 
 var buffer = new Uint8Array(memory.buffer);
-var f = fs.openSync('core.dump', 'r');
+var f = fs.openSync(`${__dirname}/core.dump`, 'r');
 if (fs.readSync(f, buffer, 0, pages * 65536) != pages * 65536)
 	throw 'Could not load memory dump';
 
@@ -16,6 +16,8 @@ library.setInput(` ${process.argv[2]} \n\\end\n`);
 
 WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).then(() => {
 	console.log('');
+
+	if (process.argv.length < 4) return;
 
 	// Save the files used by this instance to a json file.
 	let filesystem = library.getUsedFiles();
