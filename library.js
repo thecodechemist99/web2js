@@ -3,7 +3,12 @@ var process = require('process');
 var callstack = [];
 var stackstack = [];
 var files = [];
-var exec = require('child_process').execSync;
+
+var kpathsea = require('node-kpathsea');
+const Kpathsea = kpathsea.Kpathsea;
+const FILE_FORMAT = kpathsea.FILE_FORMAT;
+const kpse = new Kpathsea("latex");
+
 var usedFiles = {};
 
 var memory = undefined;
@@ -53,7 +58,7 @@ module.exports = {
 		var string = String.fromCharCode.apply(null, buffer);
 
 		if (file.stdout) {
-			process.stdout.write(string);
+			process.stdout.write(string, () => {});
 			return;
 		}
 
@@ -115,32 +120,48 @@ module.exports = {
 		var buffer = new Uint8Array(memory, pointer, length);
 		var filename = String.fromCharCode.apply(null, buffer);
 
+		filename = filename.replace(/\000+$/g,'');
+
 		if (filename.startsWith('{')) {
 			filename = filename.replace(/^{/g, '');
 			filename = filename.replace(/}.*/g, '');
 		}
 
+		if (filename.startsWith('"')) {
+			filename = filename.replace(/^"/g, '');
+			filename = filename.replace(/".*/g, '');
+		}
+
 		filename = filename.replace(/ +$/g, '');
 		filename = filename.replace(/^\*/, '');
-		filename = filename.replace(/^TeXfonts:/, '');
-		filename = filename.replace(/"/g, '');
 
-		if (filename == 'TeXformats:TEX.POOL')
+		let format = FILE_FORMAT.TEX;
+
+		if (filename.startsWith('TeXfonts:')) {
+			filename = filename.replace(/^TeXfonts:/, '');
+			format = FILE_FORMAT.TFM;
+		}
+
+		if (filename == 'TeXformats:TEX.POOL' || filename == 'tex.pool') {
 			filename = texPool;
+			format = FILE_FORMAT.TEXPOOL;
+		}
 
 		if (filename == "TTY:") {
 			files.push({ filename: "stdin",
 				stdin: true,
 				position: 0,
-				erstat: 0
+				position2: 0,
+				erstat: 0,
+				eoln: false,
+				content: Buffer.from(inputBuffer)
 			});
 			return files.length - 1;
 		}
 
-		let path = "";
-		try {
-			path = exec('kpsewhich ' + filename).toString().split("\n")[0];
-		} catch (e) {
+		var path = kpse.findFile(filename, format);
+
+		if (path == undefined) {
 			files.push({
 				filename: filename,
 				erstat: 1
@@ -153,8 +174,11 @@ module.exports = {
 		files.push({
 			filename: filename,
 			position: 0,
+			position2: 0,
 			erstat: 0,
+			eoln: false,
 			descriptor: fs.openSync(path, 'r'),
+			content: fs.readFileSync(path)
 		});
 
 		return files.length - 1;
@@ -165,7 +189,11 @@ module.exports = {
 		var filename = String.fromCharCode.apply(null, buffer);
 
 		filename = filename.replace(/ +$/g, '');
-		filename = filename.replace(/"/g, '');
+
+		if (filename.startsWith('"')) {
+			filename = filename.replace(/^"/g, '');
+			filename = filename.replace(/".*/g, '');
+		}
 
 		if (filename == "TTY:") {
 			files.push({ filename: "stdout",
@@ -178,7 +206,9 @@ module.exports = {
 		files.push({
 			filename: filename,
 			position: 0,
+			writing: true,
 			erstat: 0,
+			output: [],
 			descriptor: fs.openSync(filename, 'w')
 		});
 
@@ -188,8 +218,12 @@ module.exports = {
 	close: function(descriptor) {
 		var file = files[descriptor];
 
-		if (file.descriptor)
-			fs.closeSync(file.descriptor);
+		if (file.descriptor) {
+			if (file.writing) {
+				fs.write(file.descriptor, Buffer.concat(file.output), () => {});
+			}
+			fs.close(file.descriptor, () => {});
+		}
 
 		files[descriptor] = {};
 	},
@@ -226,11 +260,16 @@ module.exports = {
 			if (file.position >= inputBuffer.length) {
 				buffer[pointer] = 13;
 				if (callback) callback();
-			} else
+			} else {
 				buffer[pointer] = inputBuffer[file.position].charCodeAt(0);
+			}
 		} else {
 			if (file.descriptor) {
-				if (fs.readSync(file.descriptor, buffer, pointer, length, file.position) == 0) {
+				let endOfCopy = Math.min(file.position + length, file.content.length);
+
+				var bytesCopied = file.content.copy(buffer, pointer, file.position, endOfCopy);
+
+				if (bytesCopied == 0) {
 					buffer[pointer] = 0;
 					file.eof = true;
 					file.eoln = true;
@@ -254,10 +293,9 @@ module.exports = {
 
 	put: function(descriptor, pointer, length) {
 		var file = files[descriptor];
+		var buffer = new Uint8Array(memory, pointer, length);
 
-		var buffer = new Uint8Array(memory);
-
-		fs.writeSync(file.descriptor, buffer, pointer, length);
+		if (file.writing)
+			file.output.push(Buffer.from(buffer));
 	},
-
 };
