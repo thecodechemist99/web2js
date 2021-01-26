@@ -1,1 +1,1 @@
-module.exports = { pages: 1000 };
+module.exports = { pages: 1100 };

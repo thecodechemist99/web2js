@@ -55,61 +55,71 @@ module.exports = class Program {
     
     var e = this.compound.generate(environment);
     
-    var f = module.addFunctionType(null, Binaryen.none, []);
-    var main = module.addFunction("main", f, [], e);
-    module.setStart(main);
+    var main = module.addFunction("main", [], Binaryen.none, [], e);
+
+    module.addFunctionExport("main", "main");
+
+    module.addFunctionImport( "start_unwind", "asyncify", "start_unwind",
+                              Binaryen.createType([Binaryen.i32]), Binaryen.none );
+    module.addFunctionImport( "stop_unwind", "asyncify", "stop_unwind",
+                              Binaryen.createType([]), Binaryen.none );
+    module.addFunctionImport( "start_rewind", "asyncify", "start_rewind",
+                              Binaryen.createType([Binaryen.i32]), Binaryen.none );
+    module.addFunctionImport( "stop_rewind", "asyncify", "stop_rewind",
+                              Binaryen.createType([]), Binaryen.none );
 
     module.addFunctionImport( "printInteger", "library", "printInteger",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32,Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32,Binaryen.i32]), Binaryen.none );
     module.addFunctionImport( "printBoolean", "library", "printBoolean",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32,Binaryen.i32] ) );    
+                              Binaryen.createType([Binaryen.i32,Binaryen.i32]), Binaryen.none );
     module.addFunctionImport( "printChar", "library", "printChar",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32,Binaryen.i32] ) );    
+                              Binaryen.createType([Binaryen.i32,Binaryen.i32]), Binaryen.none );
     module.addFunctionImport( "printString", "library", "printString",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32,Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32,Binaryen.i32]), Binaryen.none );
     module.addFunctionImport( "printFloat", "library", "printFloat",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32,Binaryen.f32] ) );
+                              Binaryen.createType([Binaryen.i32,Binaryen.f32]), Binaryen.none );
     module.addFunctionImport( "printNewline", "library", "printNewline",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32]), Binaryen.none );
 
     module.addFunctionImport( "reset", "library", "reset",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "rewrite", "library", "rewrite",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "get", "library", "get",
-                              module.addFunctionType(null, Binaryen.none,
-                                                     [Binaryen.i32, Binaryen.i32, Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32, Binaryen.i32]), Binaryen.none );
 
     module.addFunctionImport( "put", "library", "put",
-                              module.addFunctionType(null, Binaryen.none,
-                                                     [Binaryen.i32, Binaryen.i32, Binaryen.i32] ) );    
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32, Binaryen.i32]), Binaryen.none );
 
     
     module.addFunctionImport( "eof", "library", "eof",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );    
+                              Binaryen.createType([Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "eoln", "library", "eoln",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "erstat", "library", "erstat",
-                              module.addFunctionType(null, Binaryen.i32, [Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "close", "library", "close",
-                              module.addFunctionType(null, Binaryen.none, [Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32]), Binaryen.none );
 
     module.addFunctionImport( "getCurrentMinutes", "library", "getCurrentMinutes",
-                              module.addFunctionType(null, Binaryen.i32, [] ) );
+                              Binaryen.createType([]), Binaryen.i32 );
 
     module.addFunctionImport( "getCurrentDay", "library", "getCurrentDay",
-                              module.addFunctionType(null, Binaryen.i32, [] ) );
+                              Binaryen.createType([]), Binaryen.i32 );
 
     module.addFunctionImport( "getCurrentMonth", "library", "getCurrentMonth",
-                              module.addFunctionType(null, Binaryen.i32, [] ) );
+                              Binaryen.createType([]), Binaryen.i32 );
 
     module.addFunctionImport( "getCurrentYear", "library", "getCurrentYear",
-                              module.addFunctionType(null, Binaryen.i32, [] ) );
+                              Binaryen.createType([]), Binaryen.i32 );
+
+    module.addFunctionImport( "tex_final_end", "library", "tex_final_end",
+                              Binaryen.createType([]), Binaryen.none );
 
     this.memory.setup();
     

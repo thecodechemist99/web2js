@@ -11,11 +11,15 @@ library.setMemory(memory.buffer);
 library.setInput("\n*latex.ltx \\dump\n\n", function() {});
 
 var wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
+library.setWasmExports(wasm.exports);
+
+wasm.exports.main();
 
 library.setMemory(memory.buffer);
 library.setInput(`\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}
 \\usepackage[svgnames]{xcolor}\\usepackage{tikz}\n\n`,
 	function() {
+		library.tex_final_end();
 		var buffer = new Uint8Array(memory.buffer);
 		fs.writeFileSync('core.dump', buffer);
 
@@ -27,3 +31,6 @@ library.setInput(`\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysd
 	});
 
 wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
+library.setWasmExports(wasm.exports);
+
+wasm.exports.main();

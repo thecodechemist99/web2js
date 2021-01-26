@@ -3,6 +3,7 @@ var process = require('process');
 var callstack = [];
 var stackstack = [];
 var files = [];
+var pages = require('./commonMemory').pages;
 
 var kpathsea = require('node-kpathsea');
 const Kpathsea = kpathsea.Kpathsea;
@@ -16,9 +17,67 @@ var inputBuffer = undefined;
 var callback = undefined;
 var texPool = "tex.pool";
 
+let wasmExports;
+let view;
+let finished = null;
+
+let DATA_ADDR = (pages - 100) * 1024 * 64;
+let END_ADDR = pages * 1024 * 64;
+let windingDepth = 0;
+let sleeping = false;
+
+function startUnwind() {
+	if (view) {
+		view[DATA_ADDR >> 2] = DATA_ADDR + 8;
+		view[DATA_ADDR + 4 >> 2] = END_ADDR;
+	}
+
+	wasmExports.asyncify_start_unwind(DATA_ADDR);
+	windingDepth = windingDepth + 1;
+}
+
+function startRewind() {
+	wasmExports.asyncify_start_rewind(DATA_ADDR);
+	wasmExports.main();
+}
+
+function stopRewind() {
+	windingDepth = windingDepth - 1;
+	wasmExports.asyncify_stop_rewind();
+}
+
+function deferredPromise() {
+	let _resolve, _reject;
+
+	let promise = new Promise((resolve, reject) => {
+		_resolve = resolve;
+		_reject = reject;
+	});
+	promise.resolve = _resolve;
+	promise.reject = _reject;
+
+	return promise;
+}
+
 module.exports = {
 	setMemory: function(m) {
 		memory = m;
+		view = new Int32Array(m);
+	},
+
+	setWasmExports: function(m) {
+		wasmExports = m;
+	},
+
+	executeAsync: async function(exports) {
+		wasmExports = exports;
+
+		finished = deferredPromise();
+
+		wasmExports.main();
+		wasmExports.asyncify_stop_unwind();
+
+		return finished;
 	},
 
 	setTexPool: function(m) {
@@ -151,7 +210,6 @@ module.exports = {
 			files.push({ filename: "stdin",
 				stdin: true,
 				position: 0,
-				position2: 0,
 				erstat: 0,
 				eoln: false,
 				content: Buffer.from(inputBuffer)
@@ -174,7 +232,6 @@ module.exports = {
 		files.push({
 			filename: filename,
 			position: 0,
-			position2: 0,
 			erstat: 0,
 			eoln: false,
 			descriptor: fs.openSync(path, 'r'),
@@ -259,7 +316,9 @@ module.exports = {
 		if (file.stdin) {
 			if (file.position >= inputBuffer.length) {
 				buffer[pointer] = 13;
+				file.eof = true;
 				if (callback) callback();
+				module.exports.tex_final_end();
 			} else {
 				buffer[pointer] = inputBuffer[file.position].charCodeAt(0);
 			}
@@ -297,5 +356,10 @@ module.exports = {
 
 		if (file.writing)
 			file.output.push(Buffer.from(buffer));
+	},
+
+	tex_final_end: function() {
+		module.exports.printNewline(-1);
+		if (finished) finished.resolve();
 	},
 };

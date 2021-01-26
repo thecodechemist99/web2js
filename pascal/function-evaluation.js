@@ -38,7 +38,6 @@ module.exports = class FunctionEvaluation {
       throw "Cannot compute abs."
     }
 
-    
     if (name.toLowerCase() == "round") {
       // nearest is actually "roundeven" which is what round is in pascal
       this.type = new Identifier("integer");

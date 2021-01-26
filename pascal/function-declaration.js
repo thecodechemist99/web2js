@@ -97,8 +97,6 @@ module.exports = class FunctionDeclaration {
       }
     }
 
-    var functionType = module.addFunctionType(null, result, []);
-
     var code = this.block.generate(environment);
 
     environment.program.traces[id] = this.identifier.name;
@@ -111,16 +109,16 @@ module.exports = class FunctionDeclaration {
                                    environment.program.stack.shrink( offset ),
                                    module.return( module.local.get( 1, result ) )] );
       
-      module.addFunction(this.identifier.name, functionType, [Binaryen.i32, result], code);
+      module.addFunction(this.identifier.name, [], result, [Binaryen.i32, result], code);
     } else {
       code = module.block( null, [ environment.program.stack.extend( offset - paramOffset ),
                                    module.local.set(0, module.global.get( "stack", Binaryen.i32 )),
                                    code,
                                    environment.program.stack.shrink( offset ),
                                    ] );
-      module.addFunction(this.identifier.name, functionType, [Binaryen.i32], code);
+      module.addFunction(this.identifier.name, [], result, [Binaryen.i32], code);
     }
-    
+
     id = id + 1;
     
     return;

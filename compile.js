@@ -176,5 +176,7 @@ module.runPasses([
 ]);
 
 fs.writeFileSync( process.argv[3], module.emitBinary() );
+if (process.argv.length > 4)
+	fs.writeFileSync(process.argv[4], module.emitText());
 
 console.log("Using ", program.memory.memorySize, "bytes" );

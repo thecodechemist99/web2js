@@ -14,8 +14,8 @@ if (fs.readSync(f, buffer, 0, pages * 65536) != pages * 65536)
 library.setMemory(memory.buffer);
 library.setInput(` ${process.argv[2]} \n\\end\n`);
 
-WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).then(() => {
-	console.log('');
+WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).then((wasm) => {
+	wasm.instance.exports.main();
 
 	if (process.argv.length < 4) return;
 
@@ -28,6 +28,6 @@ WebAssembly.instantiate(code, { library: library, env: { memory: memory } }).the
 		if (/\.aux$/.test(filename)) delete filesystem[filename];
 	}
 
-	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}.resolved.json`, JSON.stringify(filesystem, null, '\t' + "\n"));
+	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}.resolved.json`, JSON.stringify(filesystem, null, '\t') + "\n");
 	fs.writeFileSync(`${process.argv[2].replace(/\.tex$/, "")}.json`, JSON.stringify(Object.keys(filesystem), null, '\t') + "\n");
 });

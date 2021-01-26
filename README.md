@@ -12,17 +12,7 @@ A quick path to generate the tex.wasm and core.dump files is
 npm install
 npm run build
 npm run generate-wasm
-```
-You may want to run (assumes wasm-opt is on your path)
-```
-wasm-opt -O out.wasm -o tex.wasm
-```
-If you do not have wasm-opt available just run
-```
-mv out.wasm tex.wasm
-```
-Then run
-```
+wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm
 npm run initex
 ```
 
@@ -47,7 +37,7 @@ rsync -a --delete --exclude=.svn tug.org::tldevsrc/Build/source/texk/web2c/etexd
 
 Tie the TeX WEB source and e-TeX change file.
 ```
-tie -m tex.web texk/tex.web etexdir/etex.ch date.ch
+tie -m tex.web texk/tex.web etexdir/etex.ch date.ch tex-final-end.ch
 ```
 Produce the Pascal source by tangling.
 ```
@@ -55,7 +45,7 @@ tangle -underline tex.web etex.sys
 ```
 You will now have the Pascal source `tex.p` along with `tex.pool` which contains the strings.
 
-Compile the `tex.p` sources to get the the WebAssembly binary `tex.wasm`
+Compile the `tex.p` sources to get the the WebAssembly binary `out.wasm`
 ```
 node compile.js tex.p out.wasm
 ```
@@ -65,24 +55,19 @@ The above three commands can all be run with
 npm run generate-wasm
 ```
 
-You may want to optimize the wasm binary by running
+Then optimize and asyncify the wasm binary by running
 ```
-wasm-opt -O out.wasm -o tex.wasm
+wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm
 ```
 This assumes that wasm-opt is in your path.
 
-Otherwise run
-```
-cp out.wasm tex.wasm
-```
+Note that if you want to unwind/rewind other imports in the library, remove
+the asyncify-imports part from the above comand or specifically add the
+imports to that part.
 
 Produce the memory dump corresponding to the WebAssembly binary.
 ```
 node initex.js
-```
-or
-```
-npm run initex
 ```
 
 To test the assembly and core dump run

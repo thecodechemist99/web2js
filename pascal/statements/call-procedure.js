@@ -237,6 +237,10 @@ module.exports = class CallProcedure {
       return module.block( null, printers );
     }
 
+    if (this.procedure.name == "tex_final_end") {
+      return module.block(null, [ module.call("tex_final_end", [], Binaryen.none) ]);
+    }
+
     var f = new FunctionEvaluation( this.procedure, this.params );
 
     var code = f.generate(environment);
