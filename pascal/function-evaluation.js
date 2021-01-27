@@ -88,6 +88,33 @@ module.exports = class FunctionEvaluation {
                           Binaryen.i32 );
     }    
 
+    if (name.toLowerCase() == "inputln_actual") {
+      this.type = new Identifier("boolean");
+
+      var file = this.xs[0];
+      var bypass_eoln = this.xs[1];
+      var buffer = this.xs[2];
+      var first = this.xs[3];
+      var last = this.xs[4];
+      var max_buf_stack = this.xs[5];
+      var buf_size = this.xs[6];
+
+      buffer.generate(environment);
+      first.generate(environment);
+      last.generate(environment);
+      max_buf_stack.generate(environment);
+
+      return module.call( "inputln", [file.generate(environment),
+                                      bypass_eoln.generate(environment),
+                                      buffer.variable.pointer(),
+                                      first.variable.pointer(),
+                                      last.variable.pointer(),
+                                      max_buf_stack.variable.pointer(),
+                                      buf_size.generate(environment),
+                                     ],
+                          Binaryen.i32 );
+    }
+
     var offset = 0;
     var commands = [];
     var stack = environment.program.stack;

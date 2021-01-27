@@ -210,6 +210,7 @@ module.exports = {
 			files.push({ filename: "stdin",
 				stdin: true,
 				position: 0,
+				position2: 0,
 				erstat: 0,
 				eoln: false,
 				content: Buffer.from(inputBuffer)
@@ -232,6 +233,7 @@ module.exports = {
 		files.push({
 			filename: filename,
 			position: 0,
+			position2: 0,
 			erstat: 0,
 			eoln: false,
 			descriptor: fs.openSync(path, 'r'),
@@ -306,6 +308,53 @@ module.exports = {
 			return 1;
 		else
 			return 0;
+	},
+
+	inputln: function(descriptor, bypass_eoln, bufferp, firstp, lastp, max_buf_stackp, buf_size) {
+		var file = files[descriptor];
+		var last_nonblank = 0; // |last| with trailing blanks removed
+
+		var buffer = new Uint8Array( memory, bufferp, buf_size);
+		var first = new Uint32Array( memory, firstp, 4 );
+		var last = new Uint32Array( memory, lastp, 4 );
+		var max_buf_stack = new Uint32Array( memory, max_buf_stackp, 4 );
+
+		// cf.\ Matthew 19\thinspace:\thinspace30
+		last[0] = first[0];
+
+		// input the first character of the line into |f^|
+		if (bypass_eoln) {
+			if (!file.eof) {
+				if (file.eoln) {
+					file.position2 = file.position2 + 1;
+				}
+			}
+		}
+
+		let endOfLine = file.content.indexOf(10, file.position2);
+		if (endOfLine < 0) endOfLine = file.content.length;
+
+		if (file.position2 >= file.content.length) {
+			if (file.stdin) {
+				if (callback) callback();
+				module.exports.tex_final_end();
+			}
+
+			file.eof = true;
+			return false;
+		} else {
+			var bytesCopied = file.content.copy( buffer, first[0], file.position2, endOfLine );
+
+			last[0] = first[0] + bytesCopied;
+
+			while( buffer[last[0] - 1] == 32 )
+				last[0] = last[0] - 1;
+
+			file.position2 = endOfLine;
+			file.eoln = true;
+		}
+
+		return true;
 	},
 
 	get: function(descriptor, pointer, length) {

@@ -84,6 +84,11 @@ module.exports = class Program {
     module.addFunctionImport( "reset", "library", "reset",
                               Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
+    module.addFunctionImport( "inputln", "library", "inputln",
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32, Binaryen.i32,
+                                                   Binaryen.i32, Binaryen.i32, Binaryen.i32, Binaryen.i32]),
+                              Binaryen.i32 );
+
     module.addFunctionImport( "rewrite", "library", "rewrite",
                               Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
