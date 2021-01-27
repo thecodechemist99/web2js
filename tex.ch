@@ -1,7 +1,4 @@
-eTeX compatible constants for web2js
-
 @x
-@<Constants...@>=
 @!mem_max=30000; {greatest index in \TeX's internal |mem| array;
   must be strictly less than |max_halfword|;
   must be equal to |mem_top| in \.{INITEX}, otherwise |>=mem_top|}
@@ -41,25 +38,7 @@ eTeX compatible constants for web2js
 @!pool_name='TeXformats:TEX.POOL                     ';
   {string of length |file_name_size|; tells where the string pool appears}
 @.TeXformats@>
-
-@ Like the preceding parameters, the following quantities can be changed
-at compile time to extend or reduce \TeX's capacity. But if they are changed,
-it is necessary to rerun the initialization program \.{INITEX}
-@.INITEX@>
-to generate new tables for the production \TeX\ program.
-One can't simply make helter-skelter changes to the following constants,
-since certain rather complex initialization
-numbers are computed from them. They are defined here using
-\.{WEB} macros, instead of being put into \PASCAL's |const| list, in order to
-emphasize this distinction.
-
-@d mem_bot=0 {smallest index in the |mem| array dumped by \.{INITEX};
-  must not be less than |mem_min|}
-@d mem_top==30000 {largest index in the |mem| array dumped by \.{INITEX};
-  must be substantially larger than |mem_bot|
-  and not greater than |mem_max|}
 @y
-@<Constants...@>=
 @!mem_max=6000000; {greatest index in \TeX's internal |mem| array;
   must be strictly less than |max_halfword|;
   must be equal to |mem_top| in \.{INITEX}, otherwise |>=mem_top|}
@@ -99,55 +78,32 @@ emphasize this distinction.
 @!pool_name='TeXformats:TEX.POOL                                                 ';
   {string of length |file_name_size|; tells where the string pool appears}
 @.TeXformats@>
+@z
 
-@ Like the preceding parameters, the following quantities can be changed
-at compile time to extend or reduce \TeX's capacity. But if they are changed,
-it is necessary to rerun the initialization program \.{INITEX}
-@.INITEX@>
-to generate new tables for the production \TeX\ program.
-One can't simply make helter-skelter changes to the following constants,
-since certain rather complex initialization
-numbers are computed from them. They are defined here using
-\.{WEB} macros, instead of being put into \PASCAL's |const| list, in order to
-emphasize this distinction.
-
+@x
+@d mem_bot=0 {smallest index in the |mem| array dumped by \.{INITEX};
+  must not be less than |mem_min|}
+@d mem_top==30000 {largest index in the |mem| array dumped by \.{INITEX};
+  must be substantially larger than |mem_bot|
+  and not greater than |mem_max|}
+@d font_base=0 {smallest internal font number; must not be less
+  than |min_quarterword|}
+@d hash_size=2100 {maximum number of control sequences; it should be at most
+  about |(mem_max-mem_min)/10|}
+@d hash_prime=1777 {a prime number equal to about 85\pct! of |hash_size|}
+@d hyph_size=307 {another prime; the number of \.{\\hyphenation} exceptions}
+@^system dependencies@>
+@y
 @d mem_bot=0 {smallest index in the |mem| array dumped by \.{INITEX};
   must not be less than |mem_min|}
 @d mem_top==6000000 {largest index in the |mem| array dumped by \.{INITEX};
   must be substantially larger than |mem_bot|
   and not greater than |mem_max|}
-@z
-
-@x
-@d hash_size=2100 {maximum number of control sequences; it should be at most
-  about |(mem_max-mem_min)/10|}
-@y
+@d font_base=0 {smallest internal font number; must not be less
+  than |min_quarterword|}
 @d hash_size=70000 {maximum number of control sequences; it should be at most
   about |(mem_max-mem_min)/10|}
-@z
-
-@x
-@d hyph_size=307 {another prime; the number of \.{\\hyphenation} exceptions}
-@y
+@d hash_prime=1777 {a prime number equal to about 85\pct! of |hash_size|}
 @d hyph_size=2003 {another prime; the number of \.{\\hyphenation} exceptions}
-@z
-
-@x
-for i:=0 to @'37 do xchr[i]:=' ';
-for i:=@'177 to @'377 do xchr[i]:=' ';
-@y
-for i:=0 to @'37 do xchr[i]:=chr(i);
-for i:=@'177 to @'377 do xchr[i]:=chr(i);
-@z
-
-@x
-@d min_quarterword=0 {smallest allowable value in a |quarterword|}
-@d max_quarterword=255 {largest allowable value in a |quarterword|}
-@d min_halfword==0 {smallest allowable value in a |halfword|}
-@d max_halfword==65535 {largest allowable value in a |halfword|}
-@y
-@d min_quarterword=0 {smallest allowable value in a |quarterword|}
-@d max_quarterword=65535 {largest allowable value in a |quarterword|}
-@d min_halfword==0 {smallest allowable value in a |halfword|}
-@d max_halfword==16777215 {largest allowable value in a |halfword|}
+@^system dependencies@>
 @z
