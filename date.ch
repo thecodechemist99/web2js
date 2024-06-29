@@ -1,15 +1,9 @@
 @x
 @p procedure fix_date_and_time;
-begin time:=12*60; {minutes since midnight}
-day:=4; {fourth day of the month}
-month:=7; {seventh month of the year}
-year:=1776; {Anno Domini}
-end;
+begin sys_time:=12*60;
+sys_day:=4; sys_month:=7; sys_year:=1776;  {self-evident truths}
 @y
 @p procedure fix_date_and_time;
-begin time:=currentminutes; {minutes since midnight}
-day:=currentday; {fourth day of the month}
-month:=currentmonth; {seventh month of the year}
-year:=currentyear; {Anno Domini}
-end;
+begin sys_time:=currentminutes;
+sys_day:=currentday; sys_month:=currentmonth; sys_year:=currentyear;
 @z
