@@ -15,11 +15,11 @@
 % You should have received a copy of the GNU General Public License along with
 % this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-@x [0.0] l.83 - WEAVE: we want the whole file
-\let\maybe=\iffalse
-@y 83
-\let\maybe=\iftrue
-@z
+% @x [0.0] l.83 - WEAVE: we want the whole file
+% \let\maybe=\iffalse
+% @y 83
+% \let\maybe=\iftrue
+% @z
 
 % Change file to assist in creating the web2c-specific change file.
 % This one resolves inconsistencies between tex.ch and tex.ech.
