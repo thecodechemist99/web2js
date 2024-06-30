@@ -24,27 +24,6 @@ primitive("jobname",convert,job_name_code);@/
   othercases print_esc("jobname")
 @z
 %---------------------------------------
-@x l. 9273 - tex.web
-job_name_code: if job_name=0 then open_log_file;
-@y
-expanded_code:
-  begin
-    save_scanner_status := scanner_status;
-%    save_warning_index := warning_index;
-    save_def_ref := def_ref;
-    save_cur_string;
-    scan_pdf_ext_toks;
-%    warning_index := save_warning_index;
-    scanner_status := save_scanner_status;
-    ins_list(link(def_ref));
-    free_avail(def_ref);
-    def_ref := save_def_ref;
-    restore_cur_string;
-    return;
-  end;
-job_name_code: if job_name=0 then open_log_file;
-@z
-%---------------------------------------
 @x l. 9255 - tex.web
 @p procedure conv_toks;
 var old_setting:0..max_selector; {holds |selector| setting}
@@ -80,4 +59,25 @@ old_setting:=selector; selector:=new_string; b:=pool_ptr;
 @<Print the result of command |c|@>;
 selector:=old_setting; link(garbage):=str_toks(b); ins_list(link(temp_head));
 exit:end;
+@z
+%---------------------------------------
+@x l. 9273 - tex.web
+job_name_code: if job_name=0 then open_log_file;
+@y
+expanded_code:
+  begin
+    save_scanner_status := scanner_status;
+%    save_warning_index := warning_index;
+    save_def_ref := def_ref;
+    save_cur_string;
+    scan_pdf_ext_toks;
+%    warning_index := save_warning_index;
+    scanner_status := save_scanner_status;
+    ins_list(link(def_ref));
+    free_avail(def_ref);
+    def_ref := save_def_ref;
+    restore_cur_string;
+    return;
+  end;
+job_name_code: if job_name=0 then open_log_file;
 @z
