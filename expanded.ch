@@ -151,9 +151,3 @@ eTeX_revision_code: print(eTeX_revision);
 job_name_code: print(job_name);
 end {there are no other cases}
 @z
-%---------------------------------------
-@x
-
-@y
-
-@z
