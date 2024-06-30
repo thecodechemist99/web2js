@@ -24,6 +24,23 @@ primitive("jobname",convert,job_name_code);@/
   othercases print_esc("jobname")
 @z
 %---------------------------------------
+@x l. 9251 - tex.web
+@ The procedure |conv_toks| uses |str_toks| to insert the token list
+for |convert| functions into the scanner; `\.{\\outer}' control sequences
+are allowed to follow `\.{\\string}' and `\.{\\meaning}'.
+@y
+@ The procedure |conv_toks| uses |str_toks| to insert the token list
+for |convert| functions into the scanner; `\.{\\outer}' control sequences
+are allowed to follow `\.{\\string}' and `\.{\\meaning}'.
+
+The extra temp string |u| is needed because |pdf_scan_ext_toks| incorporates
+any pending string in its output. In order to save such a pending string,
+we have to create a temporary string that is destroyed immediately after.
+
+@d save_cur_string==if str_start[str_ptr]<pool_ptr then u:=make_string
+@d restore_cur_string==if u<>0 then begin decr(str_ptr); u:=0; end
+@z
+%---------------------------------------
 @x l. 9255 - tex.web
 @p procedure conv_toks;
 var old_setting:0..max_selector; {holds |selector| setting}
