@@ -67,11 +67,11 @@ job_name_code: if job_name=0 then open_log_file;
 expanded_code:
   begin
     save_scanner_status := scanner_status;
-%    save_warning_index := warning_index;
+    save_warning_index := warning_index;
     save_def_ref := def_ref;
     save_cur_string;
     scan_pdf_ext_toks;
-%    warning_index := save_warning_index;
+    warning_index := save_warning_index;
     scanner_status := save_scanner_status;
     ins_list(link(def_ref));
     free_avail(def_ref);
